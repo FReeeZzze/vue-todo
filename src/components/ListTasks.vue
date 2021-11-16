@@ -29,7 +29,6 @@ export default {
   },
   methods: {
     changeList() {
-      console.log("LIST_TASKS");
       this.$store.commit(CHANGE_LIST, this.todoList);
     },
   },
