@@ -7,16 +7,16 @@
       @keyup.enter="submit"
       placeholder="Input your task"
     />
-    <list-tasks :list="filteredList" @changeList="changeList" />
-    <filter-tasks :tasks="todoList" @clearCompleted="clearCompleted" />
+    <list-tasks />
+    <filter-tasks />
   </div>
 </template>
 
 <script>
+import { CHANGE_LIST } from "../store/mutation-types";
 import { keyListStorage } from "@/constants";
 import ListTasks from "@/components/ListTasks.vue";
 import FilterTasks from "@/components/FilterTasks.vue";
-import store from "@/store";
 
 export default {
   name: "Home",
@@ -24,52 +24,34 @@ export default {
   data() {
     return {
       newTask: "",
-      store: store.state,
-      todoList: store.state.todoList,
     };
   },
   created() {
     const todoListData = localStorage.getItem(keyListStorage);
 
     if (todoListData) {
-      this.todoList = JSON.parse(todoListData);
+      this.$store.commit(CHANGE_LIST, JSON.parse(todoListData));
     }
   },
   computed: {
-    filteredList() {
-      const key = this.store.currentFilter;
-      const filteredValue = this.store.filters.get(key);
-      const allTodos = this.store.filters.get("Всe");
-
-      if (!key || filteredValue === allTodos) {
-        return this.todoList;
-      }
-
-      return this.todoList.filter((item) => item.completed === filteredValue);
+    todoList() {
+      return this.$store.state.todoList;
     },
   },
   methods: {
-    changeList() {
-      this.todoList = [...this.todoList];
-    },
-
-    clearCompleted(completedTasks) {
-      this.todoList = completedTasks;
-    },
-
     submit() {
       if (!this.newTask) {
         return;
       }
       const id = "id" + new Date().getTime();
-      this.todoList = [
+      this.$store.commit(CHANGE_LIST, [
         ...this.todoList,
         {
           id,
           name: this.newTask,
           completed: false,
         },
-      ];
+      ]);
       this.newTask = "";
     },
   },

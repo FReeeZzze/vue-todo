@@ -1,5 +1,13 @@
-const store = {
-  debug: false,
+import Vue from "vue";
+import Vuex from "vuex";
+import {
+  CHANGE_LIST,
+  SET_CURRENT_FILTER,
+  CLEAR_COMPLETED_TASKS,
+} from "./mutation-types";
+Vue.use(Vuex);
+
+const store = new Vuex.Store({
   state: {
     currentFilter: "",
     filters: new Map([
@@ -25,10 +33,38 @@ const store = {
       },
     ],
   },
-  setCurrentFilter(payload) {
-    if (this.debug) console.log("setCurrentFilter вызвано с ", payload);
-    this.state.currentFilter = payload;
+  mutations: {
+    [SET_CURRENT_FILTER](state, payload) {
+      state.currentFilter = payload;
+    },
+    [CHANGE_LIST](state, payload) {
+      state.todoList = [...payload];
+    },
+    [CLEAR_COMPLETED_TASKS](state) {
+      state.todoList = state.todoList.filter((v) => v.completed !== true);
+    },
   },
-};
+  getters: {
+    filteredList: (state) => {
+      const key = state.currentFilter;
+      const filteredValue = state.filters.get(key);
+      const allTodos = state.filters.get("Всe");
+
+      if (!key || filteredValue === allTodos) {
+        return state.todoList;
+      }
+
+      return state.todoList.filter((item) => item.completed === filteredValue);
+    },
+
+    itemsLeft: (state) => {
+      return state.todoList.filter((i) => i.completed === false).length;
+    },
+
+    completedTasks: (state) => {
+      return !!state.todoList.filter((i) => i.completed === true).length;
+    },
+  },
+});
 
 export default store;

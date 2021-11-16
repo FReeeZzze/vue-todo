@@ -1,12 +1,12 @@
 <template>
   <div class="list">
-    <div class="list_task" :key="task.id" v-for="task in list">
+    <div class="list_task" :key="task.id" v-for="task in filteredList">
       <input
         :id="task.id"
         type="checkbox"
         :checked="task.completed"
         v-model="task.completed"
-        @change="$emit('changeList')"
+        @change="changeList"
       />
       <label :for="task.id"> {{ task.name }} </label>
     </div>
@@ -14,12 +14,23 @@
 </template>
 
 <script>
+import { CHANGE_LIST } from "../store/mutation-types";
+
 export default {
   name: "ListTasks",
-  props: {
-    list: {
-      type: Array,
-      default: () => [],
+  computed: {
+    todoList() {
+      return this.$store.state.todoList;
+    },
+
+    filteredList() {
+      return this.$store.getters.filteredList;
+    },
+  },
+  methods: {
+    changeList() {
+      console.log("LIST_TASKS");
+      this.$store.commit(CHANGE_LIST, this.todoList);
     },
   },
 };
