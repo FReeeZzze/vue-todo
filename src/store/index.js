@@ -65,6 +65,17 @@ const store = new Vuex.Store({
       return !!state.todoList.filter((i) => i.completed === true).length;
     },
   },
+  actions: {
+    setCurrentFilter({ commit }, payload) {
+      commit(SET_CURRENT_FILTER, payload)
+    },
+    changeList({ commit }, payload) {
+      commit(CHANGE_LIST, payload)
+    },
+    clearCompletedTasks({ commit }) {
+      commit(CLEAR_COMPLETED_TASKS)
+    }
+  }
 });
 
 export default store;

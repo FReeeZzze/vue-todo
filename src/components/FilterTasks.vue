@@ -6,21 +6,18 @@
         <input
           type="button"
           :value="filter"
-          @click="handleChangeFilter($event.target.value)"
+          @click="setCurrentFilter($event.target.value)"
         />
       </div>
       <template v-if="completedTasks">
-        <input type="button" value="Clear Completed" @click="clearCompleted" />
+        <input type="button" value="Clear Completed" @click="clearCompletedTasks" />
       </template>
     </div>
   </section>
 </template>
 
 <script>
-import {
-  SET_CURRENT_FILTER,
-  CLEAR_COMPLETED_TASKS,
-} from "../store/mutation-types";
+import { mapActions } from 'vuex';
 
 export default {
   name: "FilterTasks",
@@ -37,15 +34,7 @@ export default {
       return this.$store.getters.completedTasks;
     },
   },
-  methods: {
-    handleChangeFilter(value) {
-      this.$store.commit(SET_CURRENT_FILTER, value);
-    },
-
-    clearCompleted() {
-      this.$store.commit(CLEAR_COMPLETED_TASKS);
-    },
-  },
+  methods: mapActions(['setCurrentFilter', 'clearCompletedTasks'])
 };
 </script>
 

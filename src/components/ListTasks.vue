@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { CHANGE_LIST } from "../store/mutation-types";
+import { mapActions } from "vuex";
 
 export default {
   name: "ListTasks",
@@ -27,11 +27,7 @@ export default {
       return this.$store.getters.filteredList;
     },
   },
-  methods: {
-    changeList() {
-      this.$store.commit(CHANGE_LIST, this.todoList);
-    },
-  },
+  methods: mapActions(['changeList']),
 };
 </script>
 
